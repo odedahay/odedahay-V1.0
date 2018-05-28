@@ -20,9 +20,17 @@ const app = express();
 app.use(express.static(path.join(__dirname, 'public')));
 
 
-const { select, generateDate } = require('./helpers/handlebars-helpers');
+const { select, generateDate, truncate, stripTags } = require('./helpers/handlebars-helpers');
 // Set view engine
-app.engine('handlebars', exphbs({ defaultLayout: 'home', helpers: { select: select, generateDate: generateDate } }));
+app.engine('handlebars', exphbs({
+    defaultLayout: 'home', helpers: {
+        select: select,
+        generateDate: generateDate,
+        truncate: truncate,
+        stripTags: stripTags
+    }
+})
+);
 app.set('view engine', 'handlebars');
 
 app.use(upload());
@@ -51,7 +59,7 @@ app.use((req, res, next) => {
     res.locals.error_message = req.flash('error_message');
     res.locals.form_errors = req.flash('form_errors');
     res.locals.error = req.flash('error');
-    
+
     next();
 
 });
