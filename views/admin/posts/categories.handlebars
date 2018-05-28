@@ -1,0 +1,47 @@
+<ol class="breadcrumb">
+    <li class="breadcrumb-item">
+        <a href="/admin/">Dashboard</a>
+    </li>
+    <li class="breadcrumb-item active">All Post</li>
+</ol>
+
+<h1 class="mb-4">{{category.name}}</h1>
+
+{{>home/form-msges}}
+
+<div class="row">
+
+    <div class="col-sm-8">
+       
+        <table class="table">
+            <thead>
+                <tr>
+                    
+                    <th>Name</th>
+                    <th></th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                {{#each posts}}
+                <tr>
+                    <td>{{title}}</td>
+                    <td>
+                        {{!-- <a href="/admin/categories/edit/{{id}}" class="btn btn-info">Edit</a> --}}
+                    </td>
+
+                    <td>
+                        {{!-- <form action="/admin/categories/{{id}}?_method=DELETE" method="post">
+
+                            <button class="btn btn-danger">Delete</button>
+
+                        </form> --}}
+                    </td>
+                </tr>
+                {{/each}}
+            </tbody>
+        </table>
+
+        <a href="/admin/posts" class="btn btn-success">Back</a>
+    </div>
+</div>

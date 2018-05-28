@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const Post = require('../../models/Post');
+const Category = require('../../models/Category');
 const { isEmpty, uploadDir } = require('../../helpers/upload-helper');
 const fs = require('fs');
 
@@ -12,6 +13,7 @@ router.all('/*', (req, res, next) => {
 router.get('/', (req, res) => {
 
     Post.find({})
+        .populate('category')
         .then((posts) => {
             res.render('admin/posts/posts', {
                 posts: posts
@@ -20,7 +22,15 @@ router.get('/', (req, res) => {
 });
 
 router.get('/create', (req, res) => {
-    res.render('admin/posts/create');
+    Category.find({})
+        .then(categories => {
+            res.render('admin/posts/create',
+                {
+                    categories: categories
+                }
+            );
+        });
+
 });
 
 router.post('/create', (req, res) => {
@@ -70,13 +80,13 @@ router.post('/create', (req, res) => {
             status: req.body.status,
             allowComments: allowComments,
             body: req.body.body,
-
+            category: req.body.category,
             file: filename
 
         });
 
         newPost.save()
-            .then(() =>{
+            .then(() => {
                 req.flash('success_message', 'Post was successfully created');
                 res.redirect('/admin/posts')
             })
@@ -89,10 +99,15 @@ router.post('/create', (req, res) => {
 router.get('/edit/:id', (req, res) => {
     Post.findOne({ _id: req.params.id })
         .then((post) => {
-            res.render('admin/posts/edit', {
-                post: post
-            })
-        })
+
+            Category.find({})
+                .then(categories => {
+                    res.render('admin/posts/edit', {
+                        post: post,
+                        categories: categories
+                    })
+                });
+        });
 });
 
 // Update the Post
@@ -111,6 +126,7 @@ router.put('/edit/:id', (req, res) => {
             post.title = req.body.title;
             post.status = req.body.status;
             post.body = req.body.body;
+            post.category = req.body.category;
 
             if (!isEmpty(req.files)) {
 
@@ -137,7 +153,7 @@ router.put('/edit/:id', (req, res) => {
 
 router.delete('/:id', (req, res) => {
     Post.findOne({ _id: req.params.id })
-        .then( post => {
+        .then(post => {
 
             fs.unlink(uploadDir + post.file, (err) => {
 

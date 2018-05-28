@@ -71,7 +71,20 @@
         CKEDITOR.replace('body', {
             plugins: 'wysiwygarea,toolbar,basicstyles,link'
         });
+
     </script>
+
+    <script>
+
+        $(document).ready(function () {
+            $('.confirmDelete').on('click', function () {
+                if (!confirm('Are you sure you want to delete?')) {
+                    return false;
+                }
+            });
+        });
+    </script>
+
 
 </body>
 
