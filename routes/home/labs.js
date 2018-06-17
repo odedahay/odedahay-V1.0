@@ -10,7 +10,7 @@ router.all('/*', (req, res, next) => {
 })
 
 // List pages
-router.get('/labs', (req, res) => {
+router.get('/my-labs', (req, res) => {
     Post.find({})
         .populate('category')
         .then(posts => {
@@ -24,18 +24,22 @@ router.get('/labs', (req, res) => {
         })
 });
 
-// Detaild Page
-// router.get('/labs/:id', (req, res) => {
-//     Post.findOne({ _id: req.params.id })
-//         .then(post => {
-//             res.render('home/single', {
-//                 post: post
-//             });
-//         })
-// });
+// Get Detaild Page
+router.get('/my-labs/:id', (req, res) => {
+    Post.findOne({ _id: req.params.id })
+        .then(post => {
+            Category.find({})
+                .then(categories =>{
+                    res.render('home/single', {
+                        post: post,
+                        categories: categories
+                    });
+                })
+        })
+});
 
 // Get all Categories at public
-router.get('/labs/:catId', (req, res) => {
+router.get('/my-labs/category/:catId', (req, res) => {
     Post.find({ category: req.params.catId })
         .then(posts => {
             Category.find({})

@@ -81,22 +81,6 @@ router.get('/:catId', (req, res) => {
 });
 
 
-// Get all Categories at public
-router.get('/:catId', (req, res) => {
-    Post.find({ category: req.params.catId })
-        .populate('category')
-        .then(posts => {
-            Category.findOne({ id: req.params.id })
-                .then(category => {
-                    res.render('admin/posts/categories', {
-                        posts: posts,
-                        category: category
-                    })
-                })
-        })
-        .catch(err => console.log(err));
-});
-
 
 
 module.exports = router;
